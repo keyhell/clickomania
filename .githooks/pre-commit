@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+
+repo_root="$(git rev-parse --show-toplevel)"
+python3 "$repo_root/scripts/bump_version.py"
+
+git add "$repo_root/version.json" "$repo_root/manifest.json" \
+    "$repo_root/service-worker.js" "$repo_root/index.html"
