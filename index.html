@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="app-version" content="1.0.2" />
+    <meta name="theme-color" content="#ffffff">
+    <link rel="manifest" href="manifest.json">
     <title>Endless Clickomania</title>
     <style>
         body {
@@ -82,6 +85,16 @@
         let bestBurned = 0;
         let totalBurned = 0;
 
+        const APP_VERSION = document.querySelector('meta[name="app-version"]').content;
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register(`service-worker.js?v=${APP_VERSION}`).catch(err => {
+                    console.error('Service worker registration failed:', err);
+                });
+            });
+        }
+
         function updateLastClickInfo(count) {
             if (count > bestBurned) bestBurned = count;
             totalBurned += count;
@@ -91,6 +104,8 @@
         function startGame() {
             grid = [];
             isAnimating = false;
+            bestBurned = 0;
+            totalBurned = 0;
             for (let r = 0; r < rows; r++) {
                 grid[r] = [];
                 for (let c = 0; c < cols; c++) {
