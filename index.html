@@ -121,6 +121,45 @@
             draw();
         }
 
+        function drawBombIcon(topX, topY, bs) {
+            const cx = topX + bs / 2;
+            const cy = topY + bs / 2 + bs * 0.04;
+            const radius = bs * 0.28;
+
+            // Bomb body
+            ctx.fillStyle = '#666';
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Shine highlight on top-left
+            ctx.fillStyle = 'rgba(255,255,255,0.28)';
+            ctx.beginPath();
+            ctx.arc(cx - radius * 0.32, cy - radius * 0.32, radius * 0.28, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Fuse (curved line from top of bomb)
+            ctx.strokeStyle = '#bbb';
+            ctx.lineWidth = Math.max(1.5, bs * 0.045);
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(cx + radius * 0.25, cy - radius * 0.92);
+            ctx.quadraticCurveTo(cx + radius * 0.55, cy - radius * 1.35, cx + radius * 0.65, cy - radius * 1.75);
+            ctx.stroke();
+
+            // Spark at fuse tip
+            const sx = cx + radius * 0.65;
+            const sy = cy - radius * 1.75;
+            ctx.fillStyle = 'orange';
+            ctx.beginPath();
+            ctx.arc(sx, sy, Math.max(2, bs * 0.07), 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#ffe066';
+            ctx.beginPath();
+            ctx.arc(sx, sy, Math.max(1, bs * 0.04), 0, Math.PI * 2);
+            ctx.fill();
+        }
+
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for (let r = 0; r < rows; r++) {
@@ -129,14 +168,7 @@
                         ctx.fillStyle = grid[r][c];
                         ctx.fillRect(c * blockSize + 1, r * blockSize + 1, blockSize - 2, blockSize - 2);
                         if (grid[r][c] === 'black') {
-                            ctx.strokeStyle = 'white';
-                            ctx.lineWidth = 2;
-                            ctx.beginPath();
-                            ctx.moveTo(c * blockSize + 5, r * blockSize + 5);
-                            ctx.lineTo((c + 1) * blockSize - 5, (r + 1) * blockSize - 5);
-                            ctx.moveTo((c + 1) * blockSize - 5, r * blockSize + 5);
-                            ctx.lineTo(c * blockSize + 5, (r + 1) * blockSize - 5);
-                            ctx.stroke();
+                            drawBombIcon(c * blockSize, r * blockSize, blockSize);
                         }
                     }
                 }
@@ -216,15 +248,7 @@
                     ctx.fillStyle = b.color;
                     ctx.fillRect(-blockSize / 2 + 1, -blockSize / 2 + 1, blockSize - 2, blockSize - 2);
                     if (b.color === 'black') {
-                        ctx.strokeStyle = 'white';
-                        ctx.lineWidth = 2;
-                        const o = blockSize / 2 - 5;
-                        ctx.beginPath();
-                        ctx.moveTo(-o, -o);
-                        ctx.lineTo(o, o);
-                        ctx.moveTo(o, -o);
-                        ctx.lineTo(-o, o);
-                        ctx.stroke();
+                        drawBombIcon(-blockSize / 2, -blockSize / 2, blockSize);
                     }
                     ctx.setTransform(1, 0, 0, 1, 0, 0);
                 });
