@@ -123,40 +123,25 @@
 
         function drawBombIcon(topX, topY, bs) {
             const cx = topX + bs / 2;
-            const cy = topY + bs / 2 + bs * 0.04;
-            const radius = bs * 0.28;
+            const cy = topY + bs / 2 + bs * 0.05;
+            const radius = bs * 0.32;
 
             // Bomb body
-            ctx.fillStyle = '#666';
+            ctx.fillStyle = '#555';
             ctx.beginPath();
             ctx.arc(cx, cy, radius, 0, Math.PI * 2);
             ctx.fill();
 
-            // Shine highlight on top-left
-            ctx.fillStyle = 'rgba(255,255,255,0.28)';
-            ctx.beginPath();
-            ctx.arc(cx - radius * 0.32, cy - radius * 0.32, radius * 0.28, 0, Math.PI * 2);
-            ctx.fill();
+            // Small nub on top
+            const nubW = bs * 0.1;
+            const nubH = bs * 0.11;
+            ctx.fillStyle = '#888';
+            ctx.fillRect(cx - nubW / 2, cy - radius - nubH, nubW, nubH);
 
-            // Fuse (curved line from top of bomb)
-            ctx.strokeStyle = '#bbb';
-            ctx.lineWidth = Math.max(1.5, bs * 0.045);
-            ctx.lineCap = 'round';
+            // Shine highlight
+            ctx.fillStyle = 'rgba(255,255,255,0.3)';
             ctx.beginPath();
-            ctx.moveTo(cx + radius * 0.25, cy - radius * 0.92);
-            ctx.quadraticCurveTo(cx + radius * 0.55, cy - radius * 1.35, cx + radius * 0.65, cy - radius * 1.75);
-            ctx.stroke();
-
-            // Spark at fuse tip
-            const sx = cx + radius * 0.65;
-            const sy = cy - radius * 1.75;
-            ctx.fillStyle = 'orange';
-            ctx.beginPath();
-            ctx.arc(sx, sy, Math.max(2, bs * 0.07), 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#ffe066';
-            ctx.beginPath();
-            ctx.arc(sx, sy, Math.max(1, bs * 0.04), 0, Math.PI * 2);
+            ctx.arc(cx - radius * 0.3, cy - radius * 0.3, radius * 0.3, 0, Math.PI * 2);
             ctx.fill();
         }
 
